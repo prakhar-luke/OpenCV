@@ -9,9 +9,9 @@ cap.set(3, frame_w)
 cap.set(4, frame_h)
 cap.set(10, 100) # brightness
 
-pen_colors = [[0,9,207,255,121,255],
-                  [68,105,128,255,0,255],
-                  [56,179,196,255,106,107]]
+pen_colors = [[0,6,132,255,20,241],
+                  [99,134,119,255,86,207],
+                  [56,82,63,255,0,202]]
 color_values = [[0,0,255],
                 [255,0,0],
                 [0,128,0]]
@@ -36,17 +36,15 @@ def getContours(img):
     x, y, w, h = 0, 0, 0, 0
     for i in countours:
         area = cv2.contourArea(i)
-        if area > 100:
-            cv2.drawContours(result_img, i, -1, (255,0,0), 3)
+        if area > 500:
             perimeter = cv2.arcLength(i, True)
             aprox_corner_point = cv2.approxPolyDP(i, 0.02*perimeter, True)
-            obj_corner = len(aprox_corner_point)
             x, y, w, h = cv2.boundingRect(aprox_corner_point)
     return x+w//2, y
 
 def draw_lines(points, color_values):
-    for i in points:
-        cv2.circle(result_img, (i[0],i[1]), 10, color_values[i[2]], cv2.FILLED)
+    for point in points:
+        cv2.circle(result_img, (point[0], point[1]), 10, color_values[point[2]], cv2.FILLED)
 
 while True:
     success , frame = cap.read()
@@ -57,7 +55,6 @@ while True:
             points.append(i)
     if len(points) != 0:
         draw_lines(points, color_values)
-    cv2.imshow('Frame', frame)
     cv2.imshow('result_img', result_img)
     if cv2.waitKey(1) & 0xFF==ord('q'):
         break
